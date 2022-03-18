@@ -180,17 +180,15 @@ const octokit = new Octokit({ auth: token });
 const context = github.context;
 
 function renderMark() {
-  return `> **有人提issue啦**
-> **标  题:** ${github.payload.issue.title}
-> **发起人:** $ORANGE_ISSUE_OWNER
-> [查看详情]($ORANGE_EVENT_URL)
-`
+  return `> **${context.payload.action === 'reopened' ? context.payload.sender + '重新打开了一个issue' : '有人提issue啦'}**
+> **标  题:** ${context.payload.issue.title}
+> **发起人:** ${context.payload.issue.user.login}
+> [查看详情](${context.payload.issue.html_url})`
 }
 
 async function send() {
   console.log(context.payload)
-  console.log(context.issue)
-  console.log(context.payload.issue)
+  // console.log(context.issue)// { owner: '94dreamer', repo: 'tdesign-mobile-vue', number: 9 }
 
   // 调取 参数指定的 ReposEnum 的issue 情况
   // 形成 infoData
