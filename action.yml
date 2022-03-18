@@ -10,9 +10,6 @@ inputs:
   type:
     description: 'run type'
     required: true
-  data: 
-    description: 'run data'
-    required: false
 outputs:
   time:
     description: 'complate time'

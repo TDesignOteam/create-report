@@ -175,12 +175,10 @@ const { ReposEnum } = __nccwpck_require__(73);
 const wxhook = core.getInput("wxhook");
 const token = core.getInput("token");
 const data = core.getInput("data");
-
-const octokit = new Octokit({ auth: token });
 const context = github.context;
 
 function renderMark() {
-  return `> **${context.payload.action === 'reopened' ? context.payload.sender + '重新打开了一个issue' : '有人提issue啦'}**
+  return `> **${context.payload.action === 'reopened' ? context.payload.sender.login + '重新打开了一个issue' : '有人提issue啦'}**
 > **标  题:** ${context.payload.issue.title}
 > **发起人:** ${context.payload.issue.user.login}
 > [查看详情](${context.payload.issue.html_url})`
