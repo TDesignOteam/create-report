@@ -9,7 +9,7 @@ inputs:
     required: true
   type:
     description: 'run type'
-    required: false
+    required: true
   data: 
     description: 'run data'
     required: false
