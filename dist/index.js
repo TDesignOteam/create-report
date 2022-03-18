@@ -177,6 +177,7 @@ const token = core.getInput("token");
 const data = core.getInput("data");
 
 const octokit = new Octokit({ auth: token });
+const context = github.context;
 
 function renderMark() {
   return `> **有人提issue啦**
@@ -187,8 +188,9 @@ function renderMark() {
 }
 
 async function send() {
-  console.log(github.payload)
-  console.log(github.payload.issue)
+  console.log(context.payload)
+  console.log(context.issue)
+  console.log(context.payload.issue)
 
   // 调取 参数指定的 ReposEnum 的issue 情况
   // 形成 infoData
