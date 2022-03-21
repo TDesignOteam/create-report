@@ -1,12 +1,9 @@
 const core = require("@actions/core");
 const github = require('@actions/github');
-const { Octokit } = require("@octokit/rest");
 const { exec } = require("child_process");
-const { ReposEnum } = require("./const");
+const { ReposChatMap } = require("./const");
 
 const wxhook = core.getInput("wxhook");
-const token = core.getInput("token");
-const data = core.getInput("data");
 const context = github.context;
 
 function renderMark() {
@@ -23,14 +20,14 @@ async function send() {
   // 调取 参数指定的 ReposEnum 的issue 情况
   // 形成 infoData
   // 灌入模版 生成图表
-  const markdownString = renderMark(data);
+  const markdownString = renderMark();
 
   exec(
     `curl ${wxhook} \
    -H 'Content-Type: application/json' \
    -d '
    {
-        "chatid": "wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
+        "chatid": "${ReposChatMap[context.payload.repository.name]}",
         "msgtype": "markdown",
         "markdown": {
             "content": "${markdownString.replaceAll('"', "'")}"

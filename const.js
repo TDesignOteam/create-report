@@ -14,6 +14,7 @@ const ReposEnum = [
 ];
 
 // 联合 wrkSFfCgAAS7eHAV6zlHxmZGA49S_roQ
+// 内部用户 wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg
 const ReposChatMap = {
   "tdesign": 'wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A', // 个人
   "tdesign-vue": 'wrkSFfCgAAv6PHWDU9u3IXZDb4LxCzAQ', // vue 开发

@@ -84,6 +84,9 @@ ${repo
 
     if (!res) return false;
     const templates = await this.render(res);
+
+    console.log(templates);
+
     //  内部用户和个人
     templates.forEach((template) => {
       exec(
@@ -92,7 +95,7 @@ ${repo
          -d '
          {
               "msgtype": "markdown",
-              "chatid":"wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg|wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A"
+              "chatid": "wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg|wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
               "markdown": {
                   "content": "${template.replaceAll('"', "'")}"
               }

@@ -20,6 +20,7 @@ const ReposEnum = [
 ];
 
 // 联合 wrkSFfCgAAS7eHAV6zlHxmZGA49S_roQ
+// 内部用户 wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg
 const ReposChatMap = {
   "tdesign": 'wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A', // 个人
   "tdesign-vue": 'wrkSFfCgAAv6PHWDU9u3IXZDb4LxCzAQ', // vue 开发
@@ -132,6 +133,9 @@ ${repo
 
     if (!res) return false;
     const templates = await this.render(res);
+
+    console.log(templates);
+
     //  内部用户和个人
     templates.forEach((template) => {
       exec(
@@ -140,7 +144,7 @@ ${repo
          -d '
          {
               "msgtype": "markdown",
-              "chatid":"wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg|wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A"
+              "chatid": "wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg|wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
               "markdown": {
                   "content": "${template.replaceAll('"', "'")}"
               }
@@ -160,7 +164,6 @@ ${repo
 
 module.exports = DailyClose;
 
-
 /***/ }),
 
 /***/ 5897:
@@ -168,13 +171,10 @@ module.exports = DailyClose;
 
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
-const { Octokit } = __nccwpck_require__(5375);
 const { exec } = __nccwpck_require__(2081);
-const { ReposEnum } = __nccwpck_require__(73);
+const { ReposChatMap } = __nccwpck_require__(73);
 
 const wxhook = core.getInput("wxhook");
-const token = core.getInput("token");
-const data = core.getInput("data");
 const context = github.context;
 
 function renderMark() {
@@ -191,14 +191,14 @@ async function send() {
   // 调取 参数指定的 ReposEnum 的issue 情况
   // 形成 infoData
   // 灌入模版 生成图表
-  const markdownString = renderMark(data);
+  const markdownString = renderMark();
 
   exec(
     `curl ${wxhook} \
    -H 'Content-Type: application/json' \
    -d '
    {
-        "chatid": "wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
+        "chatid": "${ReposChatMap[context.payload.repository.name]}",
         "msgtype": "markdown",
         "markdown": {
             "content": "${markdownString.replaceAll('"', "'")}"
@@ -226,7 +226,7 @@ module.exports = send;
 const core = __nccwpck_require__(2186);
 const { Octokit } = __nccwpck_require__(5375);
 const { exec } = __nccwpck_require__(2081);
-const { ReposEnum } = __nccwpck_require__(73);
+const { ReposEnum, ReposChatMap } = __nccwpck_require__(73);
 
 const wxhook = core.getInput("wxhook");
 const token = core.getInput("token");
@@ -302,7 +302,7 @@ async function main() {
   // 灌入模版 生成图表
   const resultArr = await Promise.all(ReposEnum.map((repo) => getRepoIssuesInfo(repo)));
 
-  resultArr.forEach(data => {
+  resultArr.forEach((data, index) => {
     const markdownStringArr = renderMark(data);
     markdownStringArr.forEach((markdownString) => {
       // 个人
@@ -311,7 +311,7 @@ async function main() {
        -H 'Content-Type: application/json' \
        -d '
        {
-            "chatid": "wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
+            "chatid": "${ReposChatMap[ReposEnum[index]]}",
             "msgtype": "markdown",
             "markdown": {
                 "content": "${markdownString.replaceAll('"', "'")}"

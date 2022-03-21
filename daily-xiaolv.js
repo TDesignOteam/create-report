@@ -1,7 +1,7 @@
 const core = require("@actions/core");
 const { Octokit } = require("@octokit/rest");
 const { exec } = require("child_process");
-const { ReposEnum } = require("./const");
+const { ReposEnum, ReposChatMap } = require("./const");
 
 const wxhook = core.getInput("wxhook");
 const token = core.getInput("token");
@@ -77,7 +77,7 @@ async function main() {
   // 灌入模版 生成图表
   const resultArr = await Promise.all(ReposEnum.map((repo) => getRepoIssuesInfo(repo)));
 
-  resultArr.forEach(data => {
+  resultArr.forEach((data, index) => {
     const markdownStringArr = renderMark(data);
     markdownStringArr.forEach((markdownString) => {
       // 个人
@@ -86,7 +86,7 @@ async function main() {
        -H 'Content-Type: application/json' \
        -d '
        {
-            "chatid": "wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
+            "chatid": "${ReposChatMap[ReposEnum[index]]}",
             "msgtype": "markdown",
             "markdown": {
                 "content": "${markdownString.replaceAll('"', "'")}"
