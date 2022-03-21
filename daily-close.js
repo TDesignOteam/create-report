@@ -5,6 +5,10 @@ const { Octokit } = require("@octokit/rest");
 const { exec } = require("child_process");
 const { ReposEnum } = require("./const");
 const dayjs = require("dayjs");
+const truncate = require('lodash/truncate');
+
+const MAX_CONTENT_LENGTH = 2048;
+
 
 class DailyClose {
   constructor({ wxhook, token, octokit }) {
@@ -85,10 +89,14 @@ ${repo
     if (!res) return false;
     const templates = await this.render(res);
 
-    console.log(templates);
-
     //  内部用户和个人
     templates.forEach((template) => {
+      template = truncate(template, {
+        length: MAX_CONTENT_LENGTH,
+        separator: /(\r|\n|\r\n)+/,
+        omission: '\n\nToo large to show...',
+      }).replaceAll('"', "'");
+
       exec(
         `curl ${this.wxhook} \
          -H 'Content-Type: application/json' \
@@ -97,7 +105,7 @@ ${repo
               "msgtype": "markdown",
               "chatid": "wrkSFfCgAAZNoKR-17rH0oN7VXN-D3gg|wrkSFfCgAA-QNmuIjascLNFfmkFVQT5A",
               "markdown": {
-                  "content": "${template.replaceAll('"', "'")}"
+                  "content": "${template}"
               }
          }'`,
         (error, stdout, stderr) => {
