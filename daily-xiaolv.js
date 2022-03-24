@@ -11,7 +11,7 @@ const octokit = new Octokit({ auth: token });
 function renderMark(data) {
 
   const IssuesList = data
-    .filter((item) => !item.pull_request)
+    .filter((item) => !item.pull_request && item.labels.every(l => l.name !== 'WIP'))
     .map((item) => ({
       created_time: item.created_at.split("T")[0],
       html_url: item.html_url,
