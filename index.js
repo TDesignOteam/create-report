@@ -19,7 +19,7 @@ try {
   } else if (type === 'issue') {
     DailyIssue();
   } else {
-    core.setFailed('没有传递正确的type');
+    core.setFailed(`没有传递正确的 type, type = ${type}`);
   }
 } catch (error) {
   core.setFailed(error.message);
