@@ -95,6 +95,7 @@ ${repo
           console.error(`exec error: ${error}`);
           return;
         }
+        console.log(`msg: ${template}`);
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
       }
