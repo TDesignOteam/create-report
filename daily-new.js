@@ -31,7 +31,7 @@ class DailyNew {
           })
           .then((res) => {
             const arr = res.data
-              .filter((item) => item.created_at.split("T")[0] === this.dateString && item.user.login !== "dependabot[bot]")
+              .filter((item) => item.created_at.split("T")[0] === this.dateString)
               .map((item) => ({
                 ...item,
                 repo: item.repository_url.split("Tencent/")[1],
@@ -45,8 +45,8 @@ class DailyNew {
   }
   async render(data) {
     if (data.every((li) => !li.length)) return "";
-    return
-      `## 新增的ISSUE（${this.dateString}）
+    return [
+      `## 今日新增的 ISSUE（${this.dateString}）
 
 ${data
         .filter((repo) => repo.filter((item) => !item.pull_request).length)
@@ -55,12 +55,13 @@ ${data
 ${repo
               .filter((item) => !item.pull_request)
               .map((item) => {
-                return `- ${item.title} [@${item.user.login}](${item.html_url})`;
+                return `- [${item.title}](${item.html_url})`;
               })
               .sort()
               .join("\n")}`;
         })
-        .join("\n \n")}`;
+        .join("\n \n")}`,
+      ];
   }
   async run() {
     let res;
@@ -72,7 +73,6 @@ ${repo
 
     if (!res) return false;
     let template = await this.render(res);
-
     template = truncate(template, {
       length: MAX_CONTENT_LENGTH,
       separator: /(\r|\n|\r\n)+/,
@@ -95,7 +95,6 @@ ${repo
           console.error(`exec error: ${error}`);
           return;
         }
-        console.log(`msg: ${template}`);
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
       }
