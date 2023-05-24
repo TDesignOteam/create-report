@@ -85,7 +85,7 @@ ${repo
        -d '
        {
             "msgtype": "markdown",
-            "chatid": "wrkSFfCgAAKb6_lu-UI19iuzbmYsWFGw",
+            "chatid": "wrkSFfCgAAnG3Nyak3hg0-tc_9SRhJHA",
             "markdown": {
                 "content": "${template}"
             }
